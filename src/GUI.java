@@ -21,7 +21,7 @@ public class GUI {
     JTextField obj2MassTxt = new JTextField("");
     JTextField obj1VelTxt = new JTextField("");
     JTextField obj2VelTxt = new JTextField("");
-    
+    JButton startBtn = new JButton("Start");
 
 
 	public GUI() {
@@ -32,7 +32,6 @@ public class GUI {
 		
 		// Create Jframe
         frame=new JFrame("Simulator"); 
-        System.out.println("Hello World");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
         //Set frame size
         
@@ -60,7 +59,6 @@ public class GUI {
         weather.setPreferredSize(defaultInput);
         weather.setFont(defaultFont);
 //        weather.addActionListener(this);
-        JButton startBtn = new JButton("Start");
         startBtn.setPreferredSize(defaultInput);
         startBtn.setFont(defaultFont);
        
