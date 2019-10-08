@@ -14,6 +14,12 @@ public class Functions {
 		return velocityFinal2;
 	
 	}
+	public static double inelasticVelocity(double mass1, double mass2, double velocity1, double velocityp2) {
+		double velocityFinal;
+		double velocity2 = -(velocityp2);
+		velocityFinal = ((mass1*velocity1)+(mass2*velocity2))/(mass1+mass2);
+		return velocityFinal;
+	}
 //	public static double distanceWithFriction(double friction, )
 }
 
