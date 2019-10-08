@@ -6,5 +6,10 @@ public class shape {
 		mass = Double.parseDouble(m);
 		velocity = Double.parseDouble(v);
 	}
-	
+	public double getInitialVelocity() {
+		return velocity;
+	}
+	public double getMass() {
+		return mass;
+	}
 }
