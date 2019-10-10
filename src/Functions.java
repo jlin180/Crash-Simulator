@@ -1,3 +1,4 @@
+import java.lang.Math;
 
 public class Functions {
 
@@ -20,6 +21,11 @@ public class Functions {
 		velocityFinal = ((mass1*velocity1)+(mass2*velocity2))/(mass1+mass2);
 		return velocityFinal;
 	}
-//	public static double distanceWithFriction(double friction, )
+	public static double distanceWithFriction(double friction, double mass, double velocity) {
+		double distance;
+		distance = (.5*mass*(Math.pow(velocity, 2)))/(friction*(9.81)*mass);
+		return distance;
+		
+	}
 }
 
