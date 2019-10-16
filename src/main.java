@@ -21,8 +21,8 @@ public class main {
 		obj1 = new shape(window.obj1MassTxt.getText(), window.obj1VelTxt.getText());
 		obj2 = new shape(window.obj2MassTxt.getText(), window.obj2VelTxt.getText());
 		
-		finalVelocity1 = Functions.elasticVelocity1(obj1.getMass(),obj2.getMass(),obj1.getInitialVelocity(),obj2.getInitialVelocity());
-		finalVelocity2 = Functions.elasticVelocity2(obj1.getMass(),obj2.getMass(),obj1.getInitialVelocity(),obj2.getInitialVelocity());
+		finalVelocity1 = Functions.elasticVelocity1(obj1, obj2);
+		finalVelocity2 = Functions.elasticVelocity2(obj1, obj2);
 		
 		
 		System.out.println("Final1 "+finalVelocity1);
