@@ -1,9 +1,16 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class main {
+	//Shapes
 	static shape obj1;
 	static shape obj2;
+	static BufferedImage obj1Image = null;
+	static BufferedImage obj2Image = null;
+	
+	
 	static double finalVelocity1, finalVelocity2;
 	public static void main(String args[]) {
 		GUI window = new GUI();
@@ -27,5 +34,24 @@ public class main {
 		
 		System.out.println("Final1 "+finalVelocity1);
 		System.out.println("Final2 "+finalVelocity2);
+		runSimulation();
+	}
+	
+	public static void runSimulation() {
+		//Create initial objects
+		init();
+	}
+	
+	public static void init() {
+//		requestFocus();
+		BufferedImageLoader loader = new BufferedImageLoader();
+		try{
+			//Start off with circles
+			obj1Image = loader.loadImage("/basic sprite sheet.png");
+			obj2Image = loader.loadImage("/background.png");
+		}catch(IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
