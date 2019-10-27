@@ -1,7 +1,4 @@
 import java.awt.*;
-import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -11,191 +8,212 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
-public class GUI{
-	
-	class simulationPanel extends JPanel {
+@SuppressWarnings("serial")
+public class GUI extends JFrame implements Observer{
 
-        simulationPanel() {
-    		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-            // set a preferred size for the custom panel.
-            setPreferredSize(new Dimension(screenSize.width,screenSize.height/2*3));
-            System.out.println("Width: " + screenSize.width + " Height: " + screenSize.height/2*3);
-//            setBackground(new java.awt.Color(255, 255, 255));
-        }
-
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-        }
-        
-        public void paint(Graphics g, BufferedImage i, int x, int y) {
-        	g.drawImage(i, x, y, null);
-        }
-    }
+	// Back-end Model
+	Model _model;
 	
-	private boolean running = false;
-	private Thread thread;
+	// Screen Dimension
+	private Dimension _screenSize;
 	
-//	Canvas canvas = new Canvas();
-	
-	JFrame frame;
-	JTextField obj1MassTxt = new JTextField("");
-    JTextField obj2MassTxt = new JTextField("");
-    JTextField obj1VelTxt = new JTextField("");
-    JTextField obj2VelTxt = new JTextField("");
-    JButton startBtn = new JButton("Start");
-
-    //Base panels
-    JSplitPane splitPane = new JSplitPane();
-    simulationPanel simulation = new simulationPanel();
+	// Weather conditions
+    private final String[] _weatherList = { "Clear" ,"Icy", "Rainy ", " Windy" };
     
-    //Simulation
-    shape obj1;
-	shape obj2;
-	static BufferedImage image1 = null;
-	static BufferedImage image2 = null;
-	static BufferedImage background = null;
+	// Object texts
+	private JTextField _obj1MassText;
+    private JTextField _obj2MassText;
+    private JTextField _obj1VelText;
+    private JTextField _obj2VelText;
+    
+    // Base panel
+    SimulationPanel _simulation;
+    
+	private shape _background;
 
-	public GUI() {
-		//Base Variables
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	public GUI(Model m) {
+		super("Crash Simulator");
+		_model = m;
+		_model.setObserver(this);
+		
+		// Base Variables
+		_screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Font defaultFont = new Font("MonoSpace", Font.PLAIN, 24);
 		Dimension defaultInput = new Dimension(200,35);
 		
-		// Create Jframe
-        frame=new JFrame("Simulator"); 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
-        //Set frame size
-        
-        frame.setSize(screenSize);
-        
-        // Create Panels
+		
+		// INITIALIZE
+		
+
+	    // GUI dimensions
+		this.setSize(_screenSize);
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setVisible(true);
+		
+		// Split Pane
+	    JSplitPane splitPane = new JSplitPane();
+		
+		// JTextField for both objects
+		_obj1MassText = new JTextField("");
+		_obj2MassText = new JTextField("");
+		_obj1VelText = new JTextField("");
+		_obj2VelText = new JTextField("");
+
+		// JPanels
+		_simulation = new SimulationPanel(_screenSize.width,_screenSize.height);
         JPanel inputPanel = new JPanel(new BorderLayout());
+        JPanel topLeftPanel = new JPanel(new GridBagLayout());
+        JPanel topRightPanel = new JPanel(new GridBagLayout());
+        JPanel topCenterPanel = new JPanel(new GridBagLayout());
         
-        // Input panel 
-        JPanel obj1Panel = new JPanel(new GridBagLayout());
-        JPanel obj2Panel = new JPanel(new GridBagLayout());
-        JPanel centerPanel = new JPanel(new GridBagLayout());
+        // JButton
+        JButton startBtn = new JButton("Start");
         
-        // GridBag constraints
+        // JLabel
+        JLabel obj1MassLabel = new JLabel("Mass of first object: ");
+        JLabel obj1VelLabel = new JLabel("Velocity of first object: ");
+        JLabel obj2MassLabel = new JLabel("Mass of second object: ");
+        JLabel obj2VelLabel = new JLabel("Velocity of first object: ");
+        
+        // Constraints
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.WEST;
-        constraints.insets = new Insets(10, 10, 10, 10);
+
+        // Center Panel items
+        @SuppressWarnings({ "rawtypes", "unchecked" })
+		JComboBox weather = new JComboBox(_weatherList);
         
-        //Center Panel items
-        String [] weatherList = { "Clear" ,"Icy", "Rainy ", " Windy" };
-        JComboBox weather = new JComboBox(weatherList);
+        
+        // DESIGN
+        
+        
+        // Start Button
+        startBtn.setPreferredSize(defaultInput);
+        startBtn.setFont(defaultFont);
+
+        // JComboBox
         weather.setSelectedIndex(0);
         weather.setPreferredSize(defaultInput);
         weather.setFont(defaultFont);
-//        weather.addActionListener(this);
-        startBtn.setPreferredSize(defaultInput);
-        startBtn.setFont(defaultFont);
-       
-        //Input 1 items
-        JLabel obj1MassLbl = new JLabel("Mass of first object: ");
-        obj1MassLbl.setFont(defaultFont);
-        obj1MassTxt.setPreferredSize(defaultInput);
-        obj1MassTxt.setFont(defaultFont);
-        JLabel obj1VelLbl = new JLabel("Velocity of first object: ");
-        obj1VelLbl.setFont(defaultFont);
-        obj1VelTxt.setPreferredSize(defaultInput);
-        obj1VelTxt.setFont(defaultFont);
+                
+        // Object 1
+        obj1MassLabel.setFont(defaultFont);
+        _obj1MassText.setPreferredSize(new Dimension(_screenSize.width/10,_screenSize.height/15));
+        _obj1MassText.setFont(defaultFont);
+        obj1VelLabel.setFont(defaultFont);
+        _obj1VelText.setPreferredSize(new Dimension(_screenSize.width/10,_screenSize.height/15));
+        _obj1VelText.setFont(defaultFont);
         
-        //Input 2 items
-        JLabel obj2MassLbl = new JLabel("Mass of second object: ");
-        obj2MassLbl.setFont(defaultFont);
-        obj2MassTxt.setPreferredSize(defaultInput);
-        obj2MassTxt.setFont(defaultFont);
-        JLabel obj2VelLbl = new JLabel("Velocity of first object: ");
-        obj2VelLbl.setFont(defaultFont);
-        obj2VelTxt.setPreferredSize(defaultInput);
-        obj2VelTxt.setFont(defaultFont);
-        
+        // Object 2
+        obj2MassLabel.setFont(defaultFont);
+        _obj2MassText.setPreferredSize(new Dimension(_screenSize.width/10,_screenSize.height/15));
+        _obj2MassText.setFont(defaultFont);
+        obj2VelLabel.setFont(defaultFont);
+        _obj2VelText.setPreferredSize(new Dimension(_screenSize.width/10,_screenSize.height/15));
+        _obj2VelText.setFont(defaultFont);
+
+        // Constraints
+        constraints.anchor = GridBagConstraints.WEST;
+        constraints.insets = new Insets(10, 10, 10, 10);
         // 0,0
         constraints.gridx = 0;
         constraints.gridy = 0;
-        obj1Panel.add(obj1MassLbl, constraints);
-        obj2Panel.add(obj2MassLbl, constraints);
-        centerPanel.add(weather, constraints);
+        topLeftPanel.add(obj1MassLabel, constraints);
+        topRightPanel.add(obj2MassLabel, constraints);
+        topCenterPanel.add(weather, constraints);
         // 1,0
         constraints.gridx = 1;
-        obj1Panel.add(obj1MassTxt, constraints);
-        obj2Panel.add(obj2MassTxt, constraints);
+        topLeftPanel.add(_obj1MassText, constraints);
+        topRightPanel.add(_obj2MassText, constraints);
         // 0,1
         constraints.gridx = 0;
         constraints.gridy = 1;
-        obj1Panel.add(obj1VelLbl, constraints);
-        obj2Panel.add(obj2VelLbl, constraints);
-        centerPanel.add(startBtn, constraints);
+        topLeftPanel.add(obj1VelLabel, constraints);
+        topRightPanel.add(obj2VelLabel, constraints);
+        topCenterPanel.add(startBtn, constraints);
         // 1,1
         constraints.gridx = 1;
-        obj1Panel.add(obj1VelTxt, constraints);
-        obj2Panel.add(obj2VelTxt, constraints);
+        topLeftPanel.add(_obj1VelText, constraints);
+        topRightPanel.add(_obj2VelText, constraints);
+
         
         //Add to input panel
-        inputPanel.add(obj1Panel, BorderLayout.WEST);
-        inputPanel.add(obj2Panel, BorderLayout.EAST);
-        inputPanel.add(centerPanel, BorderLayout.CENTER);
+        inputPanel.add(topLeftPanel, BorderLayout.WEST);
+        inputPanel.add(topRightPanel, BorderLayout.EAST);
+        inputPanel.add(topCenterPanel, BorderLayout.CENTER);
                 
-        
-        //Add panels into split pane 
+        //Add panels into split pane
         splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setDividerLocation(screenSize.height/3);
-        splitPane.setTopComponent(inputPanel); 
-//        simulation.setBackground(new java.awt.Color(255, 255, 255));
-        splitPane.setBottomComponent(simulation);  
+        splitPane.setDividerLocation(_screenSize.height/3);
+        splitPane.setTopComponent(inputPanel);
+        splitPane.setBottomComponent(_simulation);
         splitPane.setEnabled(false);
-       
+        
+        
+        // ACTION LISTENERS
+        
+        
+        // Start Button
+        startBtn.addActionListener(new ButtonHandler(this));
+        
         // Add split pane
-        frame.add(splitPane);
-        frame.setResizable(false);
-        frame.setVisible(true);
+        this.add(splitPane);
+        this.pack();
+        this.setResizable(false);
 	}
 	
 	public void startSimulation() {
-		if(isValid()) {
-			shape obj1 = new shape(obj1MassTxt.getText(), obj1VelTxt.getText());
-			shape obj2 = new shape(obj2MassTxt.getText(), obj2VelTxt.getText());
+		if(filledOut()) {
+			_model.setObj1Mass(Double.parseDouble(_obj1MassText.getText()));
+			_model.setObj2Mass(Double.parseDouble(_obj2MassText.getText()));
+			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
+			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
 			
-			double finalVelocity1 = Functions.elasticVelocity1(obj1, obj2);
-			double finalVelocity2 = Functions.elasticVelocity2(obj1, obj2);
-			
-			
-			System.out.println("Final1 "+finalVelocity1);
-			System.out.println("Final2 "+finalVelocity2);
-//			this.setVisible(true);
+//			System.out.println("Final1 "+finalVelocity1);
+//			System.out.println("Final2 "+finalVelocity2);
 			init();
 		}
 	}
 	
 	public void init() {
-//		requestFocus();
-		BufferedImageLoader loader = new BufferedImageLoader();
-		try{
-			//Start off with circles
-			image1 = loader.loadImage("assets/Circle.png");
-			image2 = loader.loadImage("assets/Rectangle.png");
-			background = loader.loadImage("assets/background.png");
-		}catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		Graphics g = simulation.getGraphics();
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		System.out.println("Width: " + screenSize.width + " Height: " + screenSize.height/2*3);
-		simulation.paint(g, background, 0,0);
-		simulation.paint(g, image1, 0, 375);
-		simulation.paint(g, image2, screenSize.width-600, 375);
+		_background = new shape(0,0,"background");
+		Graphics graphics = _simulation.getGraphics();
+		System.out.println("Width: " + _screenSize.width + " Height: " + _screenSize.height/2*3);
+		_model.getObj1().setCoords(0, _screenSize.height/3);
+		_model.getObj2().setCoords(_screenSize.width-_model.getObj2().getWidth()-5, _screenSize.height/3);
+		_simulation.paint(graphics, _background.getBufferedImage(), 0, 0);
+		_simulation.paint(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
+		_simulation.paint(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
 	}
 	
-	public boolean isValid() {
-		if(obj1MassTxt.getText().length() == 0) return false;
-		if(obj2MassTxt.getText().length() == 0) return false;
-		if(obj1VelTxt.getText().length() == 0) return false;
-		if(obj2VelTxt.getText().length() == 0) return false;
+	public boolean filledOut() {
+		if(_obj1MassText.getText().length() == 0) return false;
+		if(_obj2MassText.getText().length() == 0) return false;
+		if(_obj1VelText.getText().length() == 0) return false;
+		if(_obj2VelText.getText().length() == 0) return false;
 		return true;
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		int iteration = 0;
+		while(_model.getObj2().pos_x > 0 && iteration < 1000) {
+			System.out.println("Iteration #" + iteration);
+			_model.updateMovement();
+			if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
+				_model.getObj1().setCoords((int)_model.getObj1().getVelocity()+_model.getObj1().pos_x,_model.getObj1().pos_y);
+			}
+			
+			if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
+				_model.getObj2().setCoords((int)_model.getObj2().getVelocity()+_model.getObj2().pos_x,_model.getObj2().pos_y);
+			}
+			
+			_simulation.paint(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
+			_simulation.paint(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
+			iteration++;
+			_simulation.removeAll();;
+			this.repaint();
+		}
 	}
 
 }
