@@ -1,22 +1,22 @@
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class shape {
+public class shape{
 	private double _mass;
 	private double _velocity;
 	private BufferedImage _img;
+	private String _name;
 
 	public int pos_x,pos_y;
 	
 	public shape(String obj) {
+		_name = obj;
 		_mass = 0;
 		_velocity = 0;
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try{
-			System.out.println("assets/"+obj+".png");
 			_img = loader.loadImage("assets/"+obj+".png");
 		}catch(IOException e) {
-			System.out.println("Error");
 			e.printStackTrace();
 		}
 		System.out.println();
@@ -39,6 +39,10 @@ public class shape {
 	
 	public int getWidth() {
 		return _img.getWidth();
+	}
+	
+	public String getName() {	
+		return _name;
 	}
 	
 	public int getHeight() {

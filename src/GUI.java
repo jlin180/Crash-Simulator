@@ -29,8 +29,12 @@ public class GUI extends JFrame implements Observer{
     // Base panel
     SimulationPanel _simulation;
     
+    // Background image
 	private shape _background;
 
+	// Split Pane
+	JSplitPane _splitPane;
+	
 	public GUI(Model m) {
 		super("Crash Simulator");
 		_model = m;
@@ -51,7 +55,7 @@ public class GUI extends JFrame implements Observer{
 		this.setVisible(true);
 		
 		// Split Pane
-	    JSplitPane splitPane = new JSplitPane();
+	    _splitPane = new JSplitPane();
 		
 		// JTextField for both objects
 		_obj1MassText = new JTextField("");
@@ -142,21 +146,20 @@ public class GUI extends JFrame implements Observer{
         inputPanel.add(topCenterPanel, BorderLayout.CENTER);
                 
         //Add panels into split pane
-        splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-        splitPane.setDividerLocation(_screenSize.height/3);
-        splitPane.setTopComponent(inputPanel);
-        splitPane.setBottomComponent(_simulation);
-        splitPane.setEnabled(false);
-        
+        _splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+        _splitPane.setDividerLocation(_screenSize.height/3);
+        _splitPane.setTopComponent(inputPanel);
+        _splitPane.setBottomComponent(_simulation);
+        _splitPane.setEnabled(false);
         
         // ACTION LISTENERS
         
         
         // Start Button
-        startBtn.addActionListener(new ButtonHandler(this));
+        startBtn.addActionListener(new ButtonHandler(this,_model,_screenSize.width));
         
         // Add split pane
-        this.add(splitPane);
+        this.add(_splitPane);
         this.pack();
         this.setResizable(false);
 	}
@@ -167,9 +170,6 @@ public class GUI extends JFrame implements Observer{
 			_model.setObj2Mass(Double.parseDouble(_obj2MassText.getText()));
 			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
 			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
-			
-//			System.out.println("Final1 "+finalVelocity1);
-//			System.out.println("Final2 "+finalVelocity2);
 			init();
 		}
 	}
@@ -180,9 +180,9 @@ public class GUI extends JFrame implements Observer{
 		System.out.println("Width: " + _screenSize.width + " Height: " + _screenSize.height/2*3);
 		_model.getObj1().setCoords(0, _screenSize.height/3);
 		_model.getObj2().setCoords(_screenSize.width-_model.getObj2().getWidth()-5, _screenSize.height/3);
-		_simulation.paint(graphics, _background.getBufferedImage(), 0, 0);
-		_simulation.paint(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
-		_simulation.paint(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
+		_simulation.paintComponent(graphics, _background.getBufferedImage(), 0, 0);
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
 	}
 	
 	public boolean filledOut() {
@@ -196,24 +196,21 @@ public class GUI extends JFrame implements Observer{
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		int iteration = 0;
-		while(_model.getObj2().pos_x > 0 && iteration < 1000) {
-			System.out.println("Iteration #" + iteration);
-			_model.updateMovement();
-			if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
-				_model.getObj1().setCoords((int)_model.getObj1().getVelocity()+_model.getObj1().pos_x,_model.getObj1().pos_y);
-			}
-			
-			if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
-				_model.getObj2().setCoords((int)_model.getObj2().getVelocity()+_model.getObj2().pos_x,_model.getObj2().pos_y);
-			}
-			
-			_simulation.paint(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
-			_simulation.paint(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
-			iteration++;
-			_simulation.removeAll();;
-			this.repaint();
+		_background = new shape(0,0,"background");
+		_simulation.paintComponent(_simulation.getGraphics(), _background.getBufferedImage(), 0, 0);
+		_model.updateMovement();
+		if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
+			_model.getObj1().setCoords((int)_model.getObj1().getVelocity()+_model.getObj1().pos_x,_model.getObj1().pos_y);
+			System.out.println("Obj1: " + _model.getObj1().pos_x);
 		}
+		
+		if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
+			_model.getObj2().setCoords((int)_model.getObj2().getVelocity()+_model.getObj2().pos_x,_model.getObj2().pos_y);
+			System.out.println("Obj2: " +_model.getObj2().pos_x);
+		}
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
+		_simulation.repaint();
 	}
 
 }
