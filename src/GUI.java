@@ -33,7 +33,7 @@ public class GUI extends JFrame implements Observer{
 	private shape _background;
 
 	// Split Pane
-	JSplitPane _splitPane;
+	private JSplitPane _splitPane;
 	
 	public GUI(Model m) {
 		super("Crash Simulator");
@@ -180,9 +180,8 @@ public class GUI extends JFrame implements Observer{
 		System.out.println("Width: " + _screenSize.width + " Height: " + _screenSize.height/2*3);
 		_model.getObj1().setCoords(0, _screenSize.height/3);
 		_model.getObj2().setCoords(_screenSize.width-_model.getObj2().getWidth()-5, _screenSize.height/3);
-		_simulation.paintComponent(graphics, _background.getBufferedImage(), 0, 0);
-		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
-		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
+		_simulation.paintComponent(graphics, _background, _background);
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
 	}
 	
 	public boolean filledOut() {
@@ -197,20 +196,16 @@ public class GUI extends JFrame implements Observer{
 	public void update() {
 		// TODO Auto-generated method stub
 		_background = new shape(0,0,"background");
-		_simulation.paintComponent(_simulation.getGraphics(), _background.getBufferedImage(), 0, 0);
+		_simulation.paintComponent(_simulation.getGraphics(), _background, _background);
 		_model.updateMovement();
 		if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
 			_model.getObj1().setCoords((int)_model.getObj1().getVelocity()+_model.getObj1().pos_x,_model.getObj1().pos_y);
-			System.out.println("Obj1: " + _model.getObj1().pos_x);
 		}
 		
 		if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
 			_model.getObj2().setCoords((int)_model.getObj2().getVelocity()+_model.getObj2().pos_x,_model.getObj2().pos_y);
-			System.out.println("Obj2: " +_model.getObj2().pos_x);
 		}
-		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1().getBufferedImage(), _model.getObj1().pos_x, _model.getObj1().pos_y);
-		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj2().getBufferedImage(), _model.getObj2().pos_x, _model.getObj2().pos_y);
-		_simulation.repaint();
+		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
 	}
 
 }

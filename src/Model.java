@@ -10,7 +10,9 @@ public class Model {
 	}
 
 	public void updateMovement() {
-		if(_obj1.pos_x > _obj2.pos_x) {
+		if(_obj1.pos_x + _obj1.getWidth() >= _obj2.pos_x) {
+			_obj1.setCoords(_obj1.pos_x, _obj1.pos_y);
+			_obj2.setCoords(_obj1.pos_x + _obj1.getWidth(), _obj2.pos_y);
 			double finalVelocity1 = Functions.elasticVelocity1(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
 			double finalVelocity2 = Functions.elasticVelocity2(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
 			System.out.println("Final1 "+finalVelocity1);

@@ -11,9 +11,13 @@ public class SimulationPanel extends JPanel{
         this.setPreferredSize(new Dimension(width,height/2*3));		
 	}
 	
-    public void paintComponent(Graphics g, BufferedImage img, int x, int y) {
-//        super.paintComponent(g);
-    	g.drawImage(img, x, y, null);
+    public void paintComponent(Graphics g, shape img1, shape img2) {
+	    	super.paintComponent(g);
+	    	// Draw first image
+	    	g.drawImage(img1.getBufferedImage(), img1.pos_x, img1.pos_y, null);
+	    	// Draw second image
+	    	g.drawImage(img2.getBufferedImage(), img2.pos_x, img2.pos_y, null);
+	    	g.dispose();
 //    	repaint();
     }
 }
