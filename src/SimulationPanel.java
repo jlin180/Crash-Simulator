@@ -6,7 +6,6 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class SimulationPanel extends JPanel{
-	
 	public SimulationPanel(int width, int height) {
         this.setPreferredSize(new Dimension(width,height/2*3));		
 	}
@@ -18,6 +17,11 @@ public class SimulationPanel extends JPanel{
 	    	// Draw second image
 	    	g.drawImage(img2.getBufferedImage(), img2.pos_x, img2.pos_y, null);
 	    	g.dispose();
+//	    	dispose(g);
 //    	repaint();
+    }
+    
+    public void dispose(Graphics g) {
+    	g.dispose();
     }
 }

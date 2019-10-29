@@ -20,6 +20,7 @@ public class Model {
 			_obj1.setVelocity(finalVelocity1);
 			_obj2.setVelocity(finalVelocity2);
 		}
+		//Change position with vel
 		_obj1.pos_x += _obj1.getVelocity();
 		_obj2.pos_x += _obj2.getVelocity();
 	}
