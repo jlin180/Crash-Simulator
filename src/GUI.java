@@ -77,7 +77,7 @@ public class GUI extends JFrame implements Observer{
         JLabel obj1MassLabel = new JLabel("Mass of first object: ");
         JLabel obj1VelLabel = new JLabel("Velocity of first object: ");
         JLabel obj2MassLabel = new JLabel("Mass of second object: ");
-        JLabel obj2VelLabel = new JLabel("Velocity of first object: ");
+        JLabel obj2VelLabel = new JLabel("Velocity of second object: ");
         
         // Constraints
         GridBagConstraints constraints = new GridBagConstraints();

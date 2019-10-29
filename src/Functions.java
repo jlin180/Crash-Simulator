@@ -40,13 +40,25 @@ public class Functions {
 		time = travelDistance/finalVelocity;
 		return time;
 	}
-	//Calculating velocity from friction
-	public static double velocityWithFriction(double friction, double mass , double distance) {
-		//this one is kind of weird because you're using friction to find the velocity so this doesn't have any relations to the collision
-		//distance needs to be specified (not related to distanceWithFriction function)
-		double fricVelocity;
-		fricVelocity = Math.sqrt((2*(friction*9.81*mass*distance))/mass);
-		return fricVelocity;
+	
+	//Calculating horizontal force from friction
+	public static double horizontalForce(double friction, double mass) {
+		double hFriction;
+		hFriction = friction*mass*9.81;
+		return hFriction;
+	}
+	//Calculating acceleration based off horizontal force
+	public static double acceleration(double force, double mass, double friction) {
+		double hAcceleration;
+		hAcceleration =  force/(mass*friction);
+		return hAcceleration;
+	}
+	//Calculating speed based off of acceleration from the horizontal force
+	public static double velocityFriction(double time, double acceleration) {
+		//need to get value of time somehow
+		double fVelocity;
+		fVelocity = acceleration*time;
+		return fVelocity;
 	}
 }
 
