@@ -18,6 +18,7 @@ public class ButtonHandler implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		_GUI.startBtn.setEnabled(false);
 		_GUI.startSimulation();
 		new Timer().schedule(new TimerTask() {
 			int iteration = 0;
@@ -25,6 +26,9 @@ public class ButtonHandler implements ActionListener{
 				if(_model.getObj1().pos_x >= 0 && _model.getObj2().pos_x <= _screenWidth - _model.getObj2().getWidth() && iteration < 2000) {
 					_GUI.update();
 					iteration++;
+				}
+				else {
+					_GUI.startBtn.setEnabled(true);
 				}
 			}
 		}, 0,25);

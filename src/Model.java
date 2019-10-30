@@ -3,9 +3,9 @@ public class Model {
 	private shape _obj1;
 	private shape _obj2;
 	private GUI _observer;
-	private long timeStart = 0;
+	private long timeStart;
 	private double afterColiVelocity1, afterColiVelocity2 ;
-	boolean flag = false;
+	boolean flag;
 	
 	public Model() {
 		_obj1 = new shape("circle");
@@ -15,6 +15,7 @@ public class Model {
 	public void updateMovement() {
 		//Time in between, not needed to use until collision
 		double timeInBetween = (timeStart != 0) ? (double)((System.currentTimeMillis() - timeStart)/(double)1000) : 1;
+		//Collision
 		if(_obj1.pos_x + _obj1.getWidth() >= _obj2.pos_x) {
 			_obj1.setCoords(_obj1.pos_x, _obj1.pos_y);
 			_obj2.setCoords(_obj1.pos_x + _obj1.getWidth(), _obj2.pos_y);
@@ -22,8 +23,8 @@ public class Model {
 				afterColiVelocity1 = Functions.elasticVelocity1(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
 				afterColiVelocity2 = Functions.elasticVelocity2(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
 				flag = true;
+				timeStart = System.currentTimeMillis();
 			}
-			timeStart = System.currentTimeMillis();
 			System.out.println("Time:"+timeInBetween);
 			System.out.println("Friction:"+_observer.friction);
 			double finalVelocity1 = Functions.velocityFriction(_obj1.getMass(),_observer.friction, afterColiVelocity1, timeInBetween);
@@ -63,5 +64,7 @@ public class Model {
 	public void setObj1Mass(double mass) {_obj1.setMass(mass);}
 	public void setObj2Velocity(double vel) {_obj2.setVelocity(vel);}
 	public void setObj2Mass(double mass) {_obj2.setMass(mass);}
+	public void setTime() {timeStart = 0;}
+	public void setFlag() {flag = false;}
 
 }
