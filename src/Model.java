@@ -10,6 +10,7 @@ public class Model {
 	}
 
 	public void updateMovement() {
+		double timeInBetween = (double)((System.currentTimeMillis() - _observer.timeCount)/(double)1000);
 		if(_obj1.pos_x + _obj1.getWidth() >= _obj2.pos_x) {
 			_obj1.setCoords(_obj1.pos_x, _obj1.pos_y);
 			_obj2.setCoords(_obj1.pos_x + _obj1.getWidth(), _obj2.pos_y);
