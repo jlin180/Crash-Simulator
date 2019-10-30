@@ -31,34 +31,45 @@ public class Functions {
 		return distance;
 		
 	}
-	//Calculating the time traveled after the collision
-	public static double time(double travelDistance, double finalVelocity) {
-		//calculating the time traveled
-		//travelDistance should be the distance effected by friction
-		//finalVelocity is the final velocity (After collision)
-		double time;
-		time = travelDistance/finalVelocity;
-		return time;
-	}
-	
+//	//Calculating the time traveled after the collision
+//	public static double time(double travelDistance, double finalVelocity) {
+//		//calculating the time traveled
+//		//travelDistance should be the distance effected by friction
+//		//finalVelocity is the final velocity (After collision)
+//		double time;
+//		time = travelDistance/finalVelocity;
+//		return time;
+//	}
 	//Calculating horizontal force from friction
-	public static double horizontalForce(double friction, double mass) {
-		double hFriction;
-		hFriction = friction*mass*9.81;
-		return hFriction;
-	}
+	public static double frictionForce(double friction, double mass) {
+			double hFriction;
+			hFriction = friction*mass*9.81;
+			return hFriction;
+		}
 	//Calculating acceleration based off horizontal force
-	public static double acceleration(double force, double mass, double friction) {
+	public static double accelerationH( double mass, double friction) {
 		double hAcceleration;
-		hAcceleration =  force/(mass*friction);
+		double Hforce = frictionForce(friction,mass);
+		hAcceleration =  Hforce/(mass);
 		return hAcceleration;
 	}
+	//Calculating time 
+	//acceleration obtain from acceleration formula
+//	public static double timeH(double mass, double friction, double aftercoliVelocity) {
+//		double time;
+//		double acceleration = accelerationH(mass,friction);
+//		time = aftercoliVelocity/(acceleration);
+//		return time;
+//	}
 	//Calculating speed based off of acceleration from the horizontal force
-	public static double velocityFriction(double time, double acceleration) {
+	//acceleration obtain from acceleration formula
+	public static double velocityFriction(double mass, double friction, double aftercoliVelocity, double time) {
 		//need to get value of time somehow
 		double fVelocity;
-		fVelocity = acceleration*time;
-		return fVelocity;
+		double acceleration = accelerationH(mass, friction);
+		fVelocity = aftercoliVelocity-(acceleration*time);
+		return fVelocity; 
+
 	}
 }
 
