@@ -4,14 +4,15 @@ public class Functions {
 	//Elastic collision calculation (solving for object 1's velocity)
 	public static double elasticVelocity1(double v1, double m1, double v2, double m2) {
 		double velocityFinal1;
-		double velocity2 = -(v1);
+		double velocity2 = (v2);
+		System.out.println("velocity2 in eV1: "+velocity2);
 		velocityFinal1 = (((m1 - m2)*v1 )+ (2*m2*velocity2))/(m1+m2);
 		return velocityFinal1;
 	}
 	//Elastic collision calculation (solving for object 2's velocity)
 	public static double elasticVelocity2(double v1, double m1, double v2, double m2){
 		double  velocityFinal2;
-		double velocity2 = -(v1);
+		double velocity2 = (v2);
 		velocityFinal2 = ((2*m1*v1) - ((m1-m2)*velocity2))/(m1+m2);
 		return velocityFinal2;
 	
@@ -19,7 +20,7 @@ public class Functions {
 	//Inelastic collision calculation (solving for final velocity)
 	public static double inelasticVelocity(double v1, double m1, double v2, double m2) {
 		double velocityFinal;
-		double velocity2 = -(v1);
+		double velocity2 = -(v2);
 		velocityFinal = ((m1*v1)+(m2*velocity2))/(m1+m2);
 		return velocityFinal;
 	}
@@ -66,8 +67,14 @@ public class Functions {
 	public static double velocityFriction(double mass, double friction, double aftercoliVelocity, double time) {
 		//need to get value of time somehow
 		double fVelocity;
-		double acceleration = accelerationH(mass, friction);
-		fVelocity = aftercoliVelocity-(acceleration*time);
+		double acceleration;
+		if(aftercoliVelocity < 0) {
+			acceleration =  accelerationH(mass, friction);
+		}
+		else {
+			 acceleration = -1.0 * accelerationH(mass, friction);
+		}
+		fVelocity = aftercoliVelocity+(acceleration*time);
 		return fVelocity; 
 
 	}

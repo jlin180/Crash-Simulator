@@ -4,7 +4,9 @@ public class Model {
 	private shape _obj2;
 	private GUI _observer;
 	private long timeStart = 0;
-
+	private double afterColiVelocity1, afterColiVelocity2 ;
+	boolean flag = false;
+	
 	public Model() {
 		_obj1 = new shape("circle");
 		_obj2 = new shape("rectangle");
@@ -16,13 +18,28 @@ public class Model {
 		if(_obj1.pos_x + _obj1.getWidth() >= _obj2.pos_x) {
 			_obj1.setCoords(_obj1.pos_x, _obj1.pos_y);
 			_obj2.setCoords(_obj1.pos_x + _obj1.getWidth(), _obj2.pos_y);
-			double finalVelocity1 = Functions.elasticVelocity1(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
-			double finalVelocity2 = Functions.elasticVelocity2(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
-			System.out.println("Final1 "+finalVelocity1);
-			System.out.println("Final2 "+finalVelocity2);
+			if (flag == false) {
+				afterColiVelocity1 = Functions.elasticVelocity1(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
+				afterColiVelocity2 = Functions.elasticVelocity2(_obj1.getVelocity(), _obj1.getMass(),_obj2.getVelocity(),_obj2.getMass());
+				flag = true;
+			}
+			timeStart = System.currentTimeMillis();
+			System.out.println("Time:"+timeInBetween);
+			System.out.println("Friction:"+_observer.friction);
+			double finalVelocity1 = Functions.velocityFriction(_obj1.getMass(),_observer.friction, afterColiVelocity1, timeInBetween);
+			double finalVelocity2 = Functions.velocityFriction(_obj2.getMass(),_observer.friction, afterColiVelocity2, timeInBetween);
+			if(finalVelocity2 < 0 ) {
+				finalVelocity2 =0;
+			}
+			if(finalVelocity1 > 0) {
+				finalVelocity1 =0;
+			}
+			System.out.println("afterColiV1 "+afterColiVelocity1);
+			System.out.println("afterColiV2 "+afterColiVelocity2);
+			System.out.println("Finalvelocity1: "+ finalVelocity1);
+			System.out.println("Finalvelocity2:  "+ finalVelocity2);
 			_obj1.setVelocity(finalVelocity1);
 			_obj2.setVelocity(finalVelocity2);
-			timeStart = System.currentTimeMillis();
 		}
 		//Change position with vel
 		_obj1.pos_x += _obj1.getVelocity();
