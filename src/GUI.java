@@ -17,7 +17,7 @@ public class GUI extends JFrame implements Observer{
 	private Dimension _screenSize;
 	
 	// Weather conditions
-    private final String[] _weatherList = { "Clear" ,"Icy", "Rainy ", " Windy" };
+    private final String[] _weatherList = { "Clear" ,"Icy", "Rainy ", " Windy", "Snowy" };
     
 	// Object texts
 	private JTextField _obj1MassText;
@@ -33,6 +33,12 @@ public class GUI extends JFrame implements Observer{
 
 	// Split Pane
 	private JSplitPane _splitPane;
+	
+	// Center Panel items
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	JComboBox weather = new JComboBox(_weatherList);
+    
+    double friction;
 	
 	public GUI(Model m) {
 		super("Crash Simulator");
@@ -80,10 +86,6 @@ public class GUI extends JFrame implements Observer{
         
         // Constraints
         GridBagConstraints constraints = new GridBagConstraints();
-
-        // Center Panel items
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-		JComboBox weather = new JComboBox(_weatherList);
         
         
         // DESIGN
@@ -171,6 +173,24 @@ public class GUI extends JFrame implements Observer{
 			_model.setObj2Mass(Double.parseDouble(_obj2MassText.getText()));
 			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
 			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
+			String w = weather.getSelectedItem().toString();
+			switch(w) {
+				case "Clear":
+					friction = 0.5;
+					break;
+				case "Icy":
+					friction = 0.25;
+					break;
+				case "Rainy":
+					friction = 0.35;
+					break;
+				case "Windy":
+					friction = 0.65;
+					break;
+				case "Snowy":
+					friction = 0.75;
+					break;	
+			}
 			init();
 		}
 	}
