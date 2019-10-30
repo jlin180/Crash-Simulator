@@ -10,6 +10,9 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Observer{
+	//Check if running
+	boolean running = false;
+	
 	// Back-end Model
 	Model _model;
 	
@@ -22,8 +25,8 @@ public class GUI extends JFrame implements Observer{
 	// Object texts
 	private JTextField _obj1MassText;
     private JTextField _obj2MassText;
-    private JTextField _obj1VelText;
-    private JTextField _obj2VelText;
+    JTextField _obj1VelText;
+    JTextField _obj2VelText;
     
     // Base panel
     SimulationPanel _simulation;
@@ -39,6 +42,9 @@ public class GUI extends JFrame implements Observer{
 	JComboBox weather = new JComboBox(_weatherList);
     
     double friction;
+    
+ // JButton
+    JButton startBtn = new JButton("Start");
 	
 	public GUI(Model m) {
 		super("Crash Simulator");
@@ -75,8 +81,6 @@ public class GUI extends JFrame implements Observer{
         JPanel topRightPanel = new JPanel(new GridBagLayout());
         JPanel topCenterPanel = new JPanel(new GridBagLayout());
         
-        // JButton
-        JButton startBtn = new JButton("Start");
         
         // JLabel
         JLabel obj1MassLabel = new JLabel("Mass of first object: ");
@@ -169,10 +173,13 @@ public class GUI extends JFrame implements Observer{
 	
 	public void startSimulation() {
 		if(filledOut()) {
+			//Reset model
 			_model.setObj1Mass(Double.parseDouble(_obj1MassText.getText()));
 			_model.setObj2Mass(Double.parseDouble(_obj2MassText.getText()));
 			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
 			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
+			_model.setFlag();
+			_model.setTime();
 			String w = weather.getSelectedItem().toString();
 			switch(w) {
 				case "Clear":
@@ -219,17 +226,11 @@ public class GUI extends JFrame implements Observer{
 		_background = new shape(0,0,"background");
 		_simulation.paintComponent(_simulation.getGraphics(), _background, _background);
 		_model.updateMovement();
-//		if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
-//			_model.getObj1().setCoords((int)_model.getObj1().getVelocity()/10+_model.getObj1().pos_x,_model.getObj1().pos_y);
-//		}
-//		
-//		if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
-//			_model.getObj2().setCoords((int)_model.getObj2().getVelocity()/10+_model.getObj2().pos_x,_model.getObj2().pos_y);
-//		}
 		if(_model.getObj1().pos_x + _model.getObj1().getWidth() > _model.getObj2().pos_x) {
 			_model.getObj1().setCoords(_model.getObj2().pos_x - _model.getObj1().getWidth() , _model.getObj1().pos_y);
 		}
-		System.out.println(_model.getObj1().pos_x + "   " + _model.getObj2().pos_x);
+		_obj1VelText.setText(Double.toString(Math.abs(_model.getObj1().getVelocity())));
+		_obj2VelText.setText(Double.toString(Math.abs(_model.getObj2().getVelocity())));
 		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
 	}
 
