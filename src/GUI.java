@@ -10,7 +10,8 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Observer{
-
+	//Time count
+	long timeCount;
 	// Back-end Model
 	Model _model;
 	
@@ -162,6 +163,8 @@ public class GUI extends JFrame implements Observer{
         this.add(_splitPane);
         this.pack();
         this.setResizable(false);
+//        System.out.println(System.currentTimeMillis());
+        
 	}
 	
 	public void startSimulation() {
@@ -171,6 +174,7 @@ public class GUI extends JFrame implements Observer{
 			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
 			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
 			init();
+			timeCount = System.currentTimeMillis();
 		}
 	}
 	
@@ -198,13 +202,17 @@ public class GUI extends JFrame implements Observer{
 		_background = new shape(0,0,"background");
 		_simulation.paintComponent(_simulation.getGraphics(), _background, _background);
 		_model.updateMovement();
-		if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
-			_model.getObj1().setCoords((int)_model.getObj1().getVelocity()+_model.getObj1().pos_x,_model.getObj1().pos_y);
+//		if(_model.getObj1().pos_x > 0 && _model.getObj1().pos_x < _screenSize.width - _model.getObj1().getWidth()-5) {
+//			_model.getObj1().setCoords((int)_model.getObj1().getVelocity()/10+_model.getObj1().pos_x,_model.getObj1().pos_y);
+//		}
+//		
+//		if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
+//			_model.getObj2().setCoords((int)_model.getObj2().getVelocity()/10+_model.getObj2().pos_x,_model.getObj2().pos_y);
+//		}
+		if(_model.getObj1().pos_x + _model.getObj1().getWidth() > _model.getObj2().pos_x) {
+			_model.getObj1().setCoords(_model.getObj2().pos_x - _model.getObj1().getWidth() , _model.getObj1().pos_y);
 		}
-		
-		if(_model.getObj2().pos_x > 0 && _model.getObj2().pos_x < _screenSize.width - _model.getObj2().getWidth()-5) {
-			_model.getObj2().setCoords((int)_model.getObj2().getVelocity()+_model.getObj2().pos_x,_model.getObj2().pos_y);
-		}
+		System.out.println(_model.getObj1().pos_x + "   " + _model.getObj2().pos_x);
 		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
 	}
 

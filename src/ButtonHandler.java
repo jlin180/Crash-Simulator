@@ -1,5 +1,7 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ButtonHandler implements ActionListener{
 
@@ -17,13 +19,22 @@ public class ButtonHandler implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		_GUI.startSimulation();
-		for(int iteration=0;				
-			_model.getObj1().pos_x >= 0 && 
-			_model.getObj2().pos_x <= _screenWidth - _model.getObj2().getWidth() && 
-			iteration < 200;
-			iteration++) {
-			_GUI.update();
-		}
+		new Timer().schedule(new TimerTask() {
+			int iteration = 0;
+			public void run() {
+				if(_model.getObj1().pos_x >= 0 && _model.getObj2().pos_x <= _screenWidth - _model.getObj2().getWidth() && iteration < 2000) {
+					_GUI.update();
+					iteration++;
+				}
+			}
+		}, 0,25);
+//		for(int iteration=0;				
+//			_model.getObj1().pos_x >= 0 && 
+//			_model.getObj2().pos_x <= _screenWidth - _model.getObj2().getWidth() && 
+//			iteration < 2000;
+//			iteration++) {
+//				_GUI.update();
+//		}
 	}
 
 }
