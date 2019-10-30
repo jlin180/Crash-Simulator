@@ -3,6 +3,7 @@ public class Model {
 	private shape _obj1;
 	private shape _obj2;
 	private GUI _observer;
+	private long timeStart = 0;
 
 	public Model() {
 		_obj1 = new shape("circle");
@@ -10,7 +11,8 @@ public class Model {
 	}
 
 	public void updateMovement() {
-		double timeInBetween = (double)((System.currentTimeMillis() - _observer.timeCount)/(double)1000);
+		//Time in between, not needed to use until collision
+		double timeInBetween = (timeStart != 0) ? (double)((System.currentTimeMillis() - timeStart)/(double)1000) : 1;
 		if(_obj1.pos_x + _obj1.getWidth() >= _obj2.pos_x) {
 			_obj1.setCoords(_obj1.pos_x, _obj1.pos_y);
 			_obj2.setCoords(_obj1.pos_x + _obj1.getWidth(), _obj2.pos_y);
@@ -20,6 +22,7 @@ public class Model {
 			System.out.println("Final2 "+finalVelocity2);
 			_obj1.setVelocity(finalVelocity1);
 			_obj2.setVelocity(finalVelocity2);
+			timeStart = System.currentTimeMillis();
 		}
 		//Change position with vel
 		_obj1.pos_x += _obj1.getVelocity();

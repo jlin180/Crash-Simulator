@@ -10,8 +10,6 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class GUI extends JFrame implements Observer{
-	//Time count
-	long timeCount;
 	// Back-end Model
 	Model _model;
 	
@@ -174,7 +172,6 @@ public class GUI extends JFrame implements Observer{
 			_model.setObj1Velocity(Double.parseDouble(_obj1VelText.getText()));
 			_model.setObj2Velocity(-Double.parseDouble(_obj2VelText.getText()));
 			init();
-			timeCount = System.currentTimeMillis();
 		}
 	}
 	
