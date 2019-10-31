@@ -25,6 +25,8 @@ public class Model {
 				flag = true;
 				timeStart = System.currentTimeMillis();
 			}
+		}
+		if(flag) {
 			System.out.println("Time:"+timeInBetween);
 			System.out.println("Friction:"+_observer.friction);
 			double finalVelocity1 = Functions.velocityFriction(_obj1.getMass(),_observer.friction, afterColiVelocity1, timeInBetween);
