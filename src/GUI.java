@@ -198,6 +198,10 @@ public class GUI extends JFrame implements Observer{
 					friction = 0.75;
 					break;	
 			}
+			startBtn.setEnabled(false);
+			if(!startBtn.isEnabled()) {
+				System.out.println("BTN is disabled");
+			}
 			init();
 		}
 	}
@@ -208,8 +212,8 @@ public class GUI extends JFrame implements Observer{
 		System.out.println("Width: " + _screenSize.width + " Height: " + _screenSize.height/2*3);
 		_model.getObj1().setCoords(0, _screenSize.height/3);
 		_model.getObj2().setCoords(_screenSize.width-_model.getObj2().getWidth()-5, _screenSize.height/3);
-		_simulation.paintComponent(graphics, _background, _background);
-		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
+		_simulation.paintComponent(graphics, _background);
+		_simulation.paintComponent(graphics, _model.getObj1(), _model.getObj2());
 	}
 	
 	public boolean filledOut() {
@@ -229,8 +233,12 @@ public class GUI extends JFrame implements Observer{
 		if(_model.getObj1().pos_x + _model.getObj1().getWidth() > _model.getObj2().pos_x) {
 			_model.getObj1().setCoords(_model.getObj2().pos_x - _model.getObj1().getWidth() , _model.getObj1().pos_y);
 		}
-		_obj1VelText.setText(Double.toString(Math.abs(_model.getObj1().getVelocity())));
-		_obj2VelText.setText(Double.toString(Math.abs(_model.getObj2().getVelocity())));
+		String vel1 = Double.toString(Math.abs(_model.getObj1().getVelocity()));
+		String vel2 = Double.toString(Math.abs(_model.getObj2().getVelocity()));
+		
+		_obj1VelText.setText((vel1.length() > 5) ? vel1.substring(0,5) : vel1);
+		_obj2VelText.setText((vel2.length() > 5) ? vel2.substring(0,5) : vel2);
+		
 		_simulation.paintComponent(_simulation.getGraphics(), _model.getObj1(), _model.getObj2());
 	}
 

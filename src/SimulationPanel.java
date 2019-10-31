@@ -21,6 +21,11 @@ public class SimulationPanel extends JPanel{
 //    	repaint();
     }
     
+    public void paintComponent(Graphics g, shape background) {
+    	super.paintComponent(g);
+    	g.drawImage(background.getBufferedImage(),0,0,null);
+    }
+    
     public void dispose(Graphics g) {
     	g.dispose();
     }
